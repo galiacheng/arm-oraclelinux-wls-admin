@@ -100,6 +100,36 @@
             "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
          }
       },
+      "dnszoneIdentity": {
+         "type": "Object",
+         "defaultValue": {
+            "type": "UserAssigned",
+            "userAssignedIdentities": {
+               "/subscriptions/subscriptionId/resourceGroups/TestResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/TestUserIdentity1": {}
+            }
+         }
+      },
+      "dnszoneName": {
+         "defaultValue": "contoso.xyz",
+         "type": "string",
+         "metadata": {
+            "description": "Azure DNS Zone name."
+         }
+      },
+      "dnszoneResourceGroup": {
+         "type": "string",
+         "defaultValue": "[resourceGroup().name]",
+         "metadata": {
+            "description": "Name of the resource group containing the Azure DNS Zone."
+         }
+      },
+      "dnszoneAdminConsoleLabel": {
+         "type": "string",
+         "defaultValue": "console",
+         "metadata": {
+            "description": "Specify a label used to generate subdomain of Oracle WebLogic Administration Console. The final subdomain name will be label.dnszoneName, e.g. console.contoso.xyz"
+         }
+      },
       "dsConnectionURL": {
          "defaultValue": "",
          "type": "string",
@@ -142,11 +172,25 @@
             "description": "If true, use the supplied parameters to connect the cluster to a pre-provisioned database."
          }
       },
+      "enableCustomDNS": {
+         "defaultValue": false,
+         "type": "bool",
+         "metadata": {
+            "description": "Boolean value indicating, if custom DNS Name is available or not"
+         }
+      },
       "enableELK": {
          "defaultValue": false,
          "type": "bool",
          "metadata": {
             "description": "If true, use the supplied parameters to distribute WebLogic Server logs to the Elasticsearch instance."
+         }
+      },
+      "hasDNSZones": {
+         "type": "bool",
+         "defaultValue": false,
+         "metadata": {
+            "description": "If true, the template will update records to the existing DNS Zone. If false, the template will create a new DNS Zone."
          }
       },
       "jdbcDataSourceName": {
@@ -282,27 +326,6 @@
             "description": "Boolean value indicating, if custom SSL is enabled or not"
          }
       },
-      "enableCustomDNS": {
-         "defaultValue": false,
-         "type": "bool",
-         "metadata": {
-            "description": "Boolean value indicating, if custom DNS Name is available or not"
-         }
-      },
-      "customDNSName": {
-         "defaultValue": "noCustomDNS",
-         "type": "string",
-         "metadata": {
-            "description": "Custom DNS Name used to access WebLogic Admin Server"
-         }
-      },
-      "adminConsoleSubDomain": {
-         "defaultValue": "console",
-         "type": "string",
-         "metadata": {
-            "description": "WebLogic Admin Server Console Subdomain Name which will be appended to the custom DNS Name to get the complete URL of the Weblogic Admin Console"
-         }
-      },
       "adminSSLKeyVaultResourceGroup": {
          "type": "string",
          "defaultValue": "",
@@ -380,6 +403,7 @@
       "name_adminLinkedTemplateName": "adminTemplate.json",
       "name_adminCustomSSLLinkedTemplateName": "adminTemplateForCustomSSL.json",
       "name_dbLinkedTemplate": "dbTemplate.json",
+      "name_dnszonesLinkedTemplateName": "dnszonesTemplate.json",
       "name_elkLinkedTemplateName": "elkNestedTemplate.json",
       "name_nsgLinkedTemplateName": "nsgNestedTemplate.json",
       "adminLinkedTemplateRef": "[concat('admin',if(parameters('enableCustomSSL'),'CustomSSL',''),'LinkedTemplate')]"
@@ -458,50 +482,15 @@
                },
                "enableHTTPAdminListenPort": {
                   "value": "[parameters('enableHTTPAdminListenPort')]"
-               },
-               "enableCustomDNS": {
-                  "value": "[parameters('enableCustomDNS')]"
-               },
-               "customDNSName": {
-                  "value": "[parameters('customDNSName')]"
-               },
-               "adminConsoleSubDomain": {
-                  "value": "[parameters('adminConsoleSubDomain')]"
                }
             }
          }
-      },
-      {
-         "type": "Microsoft.Resources/deployments",
-         "apiVersion": "${azure.apiVersion}",
-         "name": "networkSecurityLinkedTemplate",
-         "properties": {
-            "mode": "Incremental",
-            "templateLink": {
-               "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/', variables('name_nsgLinkedTemplateName')))]",
-               "contentVersion": "1.0.0.0"
-            },
-            "parameters": {
-               "denyPublicTrafficForAdminServer": {
-                  "value": "[parameters('denyPublicTrafficForAdminServer')]"
-               },
-               "networkSecurityGroupName": {
-                  "value": "[concat(parameters('dnsLabelPrefix'), '-nsg')]"
-               }
-            }
-         },
-         "dependsOn": [
-            "[resourceId('Microsoft.Resources/deployments', 'adminLinkedTemplate')]"
-         ]
       },
       {
          "name": "adminCustomSSLLinkedTemplate",
          "type": "Microsoft.Resources/deployments",
          "apiVersion": "${azure.apiVersion}",
          "condition": "[parameters('enableCustomSSL')]",
-         "dependsOn": [
-            "[resourceId('Microsoft.Resources/deployments', '${admin.start}')]"
-         ],
          "properties": {
             "mode": "Incremental",
             "templateLink": {
@@ -556,15 +545,6 @@
                },
                "enableHTTPAdminListenPort": {
                   "value": "[parameters('enableHTTPAdminListenPort')]"
-               },
-               "enableCustomDNS": {
-                  "value": "[parameters('enableCustomDNS')]"
-               },
-               "customDNSName": {
-                  "value": "[parameters('customDNSName')]"
-               },
-               "adminConsoleSubDomain": {
-                  "value": "[parameters('adminConsoleSubDomain')]"
                },
                "enableCustomSSL": {
                   "value": "[parameters('enableCustomSSL')]"
@@ -627,9 +607,82 @@
          }
       },
       {
+         "type": "Microsoft.Resources/deployments",
+         "apiVersion": "${azure.apiVersion}",
+         "name": "networkSecurityLinkedTemplate",
+         "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+               "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/', variables('name_nsgLinkedTemplateName')))]",
+               "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+               "denyPublicTrafficForAdminServer": {
+                  "value": "[parameters('denyPublicTrafficForAdminServer')]"
+               },
+               "networkSecurityGroupName": {
+                  "value": "[concat(parameters('dnsLabelPrefix'), '-nsg')]"
+               }
+            }
+         },
+         "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments', 'adminLinkedTemplate')]",
+            "[resourceId('Microsoft.Resources/deployments', 'adminCustomSSLLinkedTemplate')]"
+         ]
+      },
+      {
+         "type": "Microsoft.Resources/deployments",
+         "apiVersion": "${azure.apiVersion}",
+         "name": "dnszonesLinkedTemplate",
+         "condition": "[parameters('enableCustomDNS')]",
+         "dependsOn": [
+            "[resourceId('Microsoft.Resources/deployments', 'networkSecurityLinkedTemplate')]"
+         ],
+         "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+               "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/', variables('name_dnszonesLinkedTemplateName')))]",
+               "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+               "_artifactsLocation": {
+                  "value": "[parameters('_artifactsLocation')]"
+               },
+               "_artifactsLocationSasToken": {
+                  "value": "[parameters('_artifactsLocationSasToken')]"
+               },
+               "dnszonesARecordSetNames": {
+                  "value": [
+                     "[parameters('dnszoneAdminConsoleLabel')]"
+                  ]
+               },
+               "dnszoneName": {
+                  "value": "[parameters('dnszoneName')]"
+               },
+               "hasDNSZones": {
+                  "value": "[parameters('hasDNSZones')]"
+               },
+               "identity": {
+                  "value": "[parameters('dnszoneIdentity')]"
+               },
+               "location": {
+                  "value": "[parameters('location')]"
+               },
+               "resourceGroup": {
+                  "value": "[parameters('dnszoneResourceGroup')]"
+               },
+               "targetResources": {
+                  "value": [
+                     "[reference(variables('adminLinkedTemplateRef'), '${azure.apiVersion}').outputs._adminPublicIPId.value]"
+                  ]
+               }
+            }
+         }
+      },
+      {
          "name": "dbLinkedTemplate",
          "dependsOn": [
-            "[resourceId('Microsoft.Resources/deployments', variables('adminLinkedTemplateRef'))]"
+            "[resourceId('Microsoft.Resources/deployments', 'dnszonesLinkedTemplate')]"
          ],
          "type": "Microsoft.Resources/deployments",
          "apiVersion": "${azure.apiVersion}",
