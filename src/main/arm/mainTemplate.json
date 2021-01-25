@@ -626,8 +626,7 @@
             }
          },
          "dependsOn": [
-            "[resourceId('Microsoft.Resources/deployments', 'adminLinkedTemplate')]",
-            "[resourceId('Microsoft.Resources/deployments', 'adminCustomSSLLinkedTemplate')]"
+            "[resourceId('Microsoft.Resources/deployments', variables('adminLinkedTemplateRef'))]"
          ]
       },
       {
@@ -854,6 +853,8 @@
          "name": "pid-057f09cd-6f90-5c1c-b655-3aba168aef35",
          "dependsOn": [
             "[resourceId('Microsoft.Resources/deployments', variables('adminLinkedTemplateRef'))]",
+            "[resourceId('Microsoft.Resources/deployments', 'networkSecurityLinkedTemplate')]",
+            "[resourceId('Microsoft.Resources/deployments', 'dnszonesLinkedTemplate')]",
             "[resourceId('Microsoft.Resources/deployments', 'dbLinkedTemplate')]",
             "[resourceId('Microsoft.Resources/deployments', 'aadLinkedTemplate')]",
             "[resourceId('Microsoft.Resources/deployments', 'elkLinkedTemplate')]"
