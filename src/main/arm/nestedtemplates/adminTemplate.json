@@ -538,7 +538,7 @@
    "outputs": {
       "_adminPublicIPId": {
          "type": "string",
-         "value": "[resourceId('Microsoft.Network/publicIPAddresses',concat(parameters('adminVMName'),variables('name_publicIPAddress')))]"
+         "value": "[resourceId('Microsoft.Network/publicIPAddresses',variables('name_publicIPAddress'))]"
       },
       "hostname": {
          "type": "string",
