@@ -453,8 +453,14 @@
                "authenticationType": {
                   "value": "[parameters('authenticationType')]"
                },
+               "customDNSName": {
+                  "value": "[if(parameters('enableCustomDNS'), format('{0}.{1}', parameters('dnszoneAdminConsoleLabel'),parameters('dnszoneName')),'')]"
+               },
                "dnsLabelPrefix": {
                   "value": "[parameters('dnsLabelPrefix')]"
+               },
+               "enableCustomDNS": {
+                  "value": "[parameters('enableCustomDNS')]"
                },
                "location": {
                   "value": "[parameters('location')]"
@@ -516,8 +522,14 @@
                "authenticationType": {
                   "value": "[parameters('authenticationType')]"
                },
+               "customDNSName": {
+                  "value": "[if(parameters('enableCustomDNS'), format('{0}.{1}', parameters('dnszoneAdminConsoleLabel'),parameters('dnszoneName')),'')]"
+               },
                "dnsLabelPrefix": {
                   "value": "[parameters('dnsLabelPrefix')]"
+               },
+               "enableCustomDNS": {
+                  "value": "[parameters('enableCustomDNS')]"
                },
                "location": {
                   "value": "[parameters('location')]"
