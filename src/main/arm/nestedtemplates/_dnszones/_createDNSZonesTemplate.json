@@ -111,6 +111,10 @@
         "dnszonesName": {
             "type": "string",
             "value": "[parameters('dnszoneName')]"
+        },
+        "dnsZoneNameServers": {
+            "type": "array",
+            "value": "[reference(parameters('dnszoneName')).nameServers]"
         }
     }
 }

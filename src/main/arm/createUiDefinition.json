@@ -596,7 +596,7 @@
                             {
                                 "name": "infoDNSIndentity",
                                 "type": "Microsoft.Common.InfoBox",
-                                "visible": "[and(bool(steps('section_dnsConfiguration').customDNSSettings.bringDNSZone), less(length(steps('section_appGateway').gatewayIdentity.userAssignedIdentities),1), less(length(steps('section_dnsConfiguration').customDNSSettings.dnsIdentity.userAssignedIdentities), 1))]",
+                                "visible": "[and(steps('section_dnsConfiguration').customDNSSettings.bringDNSZone, less(length(steps('section_dnsConfiguration').customDNSSettings.dnsIdentity.userAssignedIdentities), 1))]",
                                 "options": {
                                     "icon": "Error",
                                     "text": "This option will use Azure deployment scripts to update records to your Azure DNS Zone. You have to add at least one user assigned identity to access Azure resources.",
@@ -617,7 +617,7 @@
                                     "hideSystemAssignedIdentity": true,
                                     "hideUserAssignedIdentity": false
                                 },
-                                "visible": "[bool(steps('section_dnsConfiguration').customDNSSettings.bringDNSZone)]"
+                                "visible": "[steps('section_dnsConfiguration').customDNSSettings.bringDNSZone]"
                             }
                         ]
                     }

@@ -412,7 +412,7 @@
       {
          "type": "Microsoft.Resources/deployments",
          "apiVersion": "2020-06-01",
-         "name": "pid-4b4d5bab-1032-530c-88db-ac3f7caf440d",
+         "name": "pid-18f4b80a-6ca2-5840-8f88-4e7156ed6db0",
          "properties": {
             "mode": "Incremental",
             "template": {
@@ -851,10 +851,9 @@
       {
          "type": "Microsoft.Resources/deployments",
          "apiVersion": "2020-06-01",
-         "name": "pid-08e3f14d-2362-5c43-8269-133a0045d223",
+         "name": "pid-057f09cd-6f90-5c1c-b655-3aba168aef35",
          "dependsOn": [
             "[resourceId('Microsoft.Resources/deployments', variables('adminLinkedTemplateRef'))]",
-            "[resourceId('Microsoft.Resources/deployments', 'dbLinkedTemplate')]",
             "[resourceId('Microsoft.Resources/deployments', 'dbLinkedTemplate')]",
             "[resourceId('Microsoft.Resources/deployments', 'aadLinkedTemplate')]",
             "[resourceId('Microsoft.Resources/deployments', 'elkLinkedTemplate')]"
@@ -894,6 +893,11 @@
       "logIndex": {
          "type": "string",
          "value": "[if(parameters('enableELK'), reference('elkLinkedTemplate', '2020-06-01').outputs.logIndex.value, '')]"
+      },
+      "dnsZoneNameServers": {
+         "type": "array",
+         "condition": "[not(parameters('hasDNSZones'))]",
+         "value": "[reference('dnszonesLinkedTemplate','2020-06-01').outputs.dnsZoneNameServers.value]"
       }
    }
 }

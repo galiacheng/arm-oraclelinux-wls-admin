@@ -106,7 +106,7 @@
     "resources": [
         {
             "apiVersion": "2020-06-01",
-            "name": "pid-aa030ff6-c680-53de-8891-8dd16ce08aa6",
+            "name": "pid-c40d7aa8-9fe7-51c6-86de-27e1b1678735",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -207,7 +207,7 @@
         },
         {
             "apiVersion": "2020-06-01",
-            "name": "pid-916943db-498f-59d7-a410-4cf37e9ed1ad",
+            "name": "pid-022d99e3-8ba3-5822-b6d5-bcec64518286",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -221,5 +221,10 @@
         }
     ],
     "outputs": {
+        "dnsZoneNameServers": {
+            "type": "array",
+            "condition": "[not(parameters('hasDNSZones'))]",
+            "value": "[reference('createDNSZone', '2020-06-01').outputs.dnsZoneNameServers.value]"
+        }
     }
 }

@@ -92,7 +92,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "4bc6e9ac-72bb-5224-b9be-79d074dc9bec",
+            "name": "6b253477-1753-5eb1-9448-506ab47494d7",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -128,7 +128,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "3b35b279-0e94-5264-85f5-0d9d662f8a38",
+            "name": "e4549cf7-1f1e-5add-a543-0dfcc627976b",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
             ],
