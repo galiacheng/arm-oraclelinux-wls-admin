@@ -226,8 +226,8 @@
    },
    "resources": [
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${admin.admin.start}",
+         "apiVersion": "2020-06-01",
+         "name": "pid-49fcd66a-88f9-5699-9235-597fd9ed7065",
          "type": "Microsoft.Resources/deployments",
          "properties": {
             "mode": "Incremental",
@@ -241,7 +241,7 @@
       },
       {
          "type": "Microsoft.Network/networkSecurityGroups",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[variables('name_networkSecurityGroup')]",
          "location": "[parameters('location')]",
          "properties": {
@@ -290,7 +290,7 @@
       },
       {
          "type": "Microsoft.Storage/storageAccounts",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[variables('name_storageAccount')]",
          "location": "[parameters('location')]",
          "sku": {
@@ -306,7 +306,7 @@
       },
       {
          "type": "Microsoft.Storage/storageAccounts/fileServices",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[concat(variables('name_storageAccount'), '/default')]",
          "dependsOn": [
             "[variables('ref_storage')]"
@@ -318,7 +318,7 @@
       },
       {
          "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[concat(variables('name_storageAccount'), '/default/', variables('name_share'))]",
          "dependsOn": [
             "[variables('ref_fileService')]",
@@ -330,7 +330,7 @@
       },
       {
          "type": "Microsoft.Network/publicIPAddresses",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[variables('name_publicIPAddress')]",
          "location": "[parameters('location')]",
          "properties": {
@@ -342,7 +342,7 @@
       },
       {
          "type": "Microsoft.Network/virtualNetworks",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[variables('name_virtualNetwork')]",
          "location": "[parameters('location')]",
          "dependsOn": [
@@ -369,7 +369,7 @@
       },
       {
          "type": "Microsoft.Network/networkInterfaces",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[variables('name_nic')]",
          "location": "[parameters('location')]",
          "dependsOn": [
@@ -398,7 +398,7 @@
       },
       {
          "type": "Microsoft.Compute/virtualMachines",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "name": "[parameters('adminVMName')]",
          "location": "[parameters('location')]",
          "dependsOn": [
@@ -462,7 +462,7 @@
       {
          "type": "Microsoft.Compute/virtualMachines/extensions",
          "name": "[concat(parameters('adminVMName'),'/newuserscript')]",
-         "apiVersion": "${azure.apiVersion}",
+         "apiVersion": "2020-06-01",
          "location": "[parameters('location')]",
          "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines/', parameters('adminVMName'))]",
@@ -484,8 +484,8 @@
          }
       },
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${admin.admin.end}",
+         "apiVersion": "2020-06-01",
+         "name": "be93a897-f205-5faa-8998-a0bb2014a5ac",
          "type": "Microsoft.Resources/deployments",
          "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('adminVMName'), 'newuserscript')]"
@@ -501,8 +501,8 @@
          }
       },
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${from.owls-122130-8u131-ol74}",
+         "apiVersion": "2020-06-01",
+         "name": "pid-caa3ea2b-cdec-55ee-8510-854ed10d7ebe",
          "type": "Microsoft.Resources/deployments",
          "condition": "[if(contains(variables('name_linuxImageOfferSKU'), 'owls-122130-8u131-ol74'), bool('true'), bool('false'))]",
          "dependsOn": [
@@ -519,8 +519,8 @@
          }
       },
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${from.owls-122130-8u131-ol73}",
+         "apiVersion": "2020-06-01",
+         "name": "pid-bf1d0f1a-cb9a-5453-bf70-42b4efe8c15e",
          "type": "Microsoft.Resources/deployments",
          "condition": "[if(contains(variables('name_linuxImageOfferSKU'), 'from.owls-122130-8u131-ol73'), bool('true'), bool('false'))]",
          "dependsOn": [
@@ -537,8 +537,8 @@
          }
       },
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${from.owls-122140-8u251-ol76}",
+         "apiVersion": "2020-06-01",
+         "name": "pid-bde756bb-ce96-54d5-a478-04d9bd87e9db",
          "type": "Microsoft.Resources/deployments",
          "condition": "[if(contains(variables('name_linuxImageOfferSKU'), 'from.owls-122140-8u251-ol76'), bool('true'), bool('false'))]",
          "dependsOn": [
@@ -555,8 +555,8 @@
          }
       },
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${from.owls-141100-8u251-ol76}",
+         "apiVersion": "2020-06-01",
+         "name": "pid-b6f00a34-1478-5a10-9a84-49c4051b57b8",
          "type": "Microsoft.Resources/deployments",
          "condition": "[if(contains(variables('name_linuxImageOfferSKU'), 'owls-141100-8u251-ol76'), bool('true'), bool('false'))]",
          "dependsOn": [
@@ -573,8 +573,8 @@
          }
       },
       {
-         "apiVersion": "${azure.apiVersion}",
-         "name": "${from.owls-141100-11_07-ol76}",
+         "apiVersion": "2020-06-01",
+         "name": "pid-afc8f9c5-8c5d-5d1b-ab4d-3116ca908bfd",
          "type": "Microsoft.Resources/deployments",
          "condition": "[if(contains(variables('name_linuxImageOfferSKU'), 'owls-141100-11_07-ol76'), bool('true'), bool('false'))]",
          "dependsOn": [
