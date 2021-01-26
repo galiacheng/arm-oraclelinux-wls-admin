@@ -202,7 +202,7 @@
    "variables": {
       "const_addressPrefix": "10.0.0.0/16",
       "const_hyphen": "-",
-      "const_imageOffer": "[concat('weblogic',variables('const_hyphen'), split(variables('name_linuxImageOfferSKU'),variables('const_hyphen'))[1],variables('const_hyphen'),split(variables('name_linuxImageOfferSKU'),variables('const_hyphen'))[2],variables('const_hyphen'),split(variables('name_linuxImageOfferSKU'),variables('const_hyphen'))[3],if(parameters('usePreviewImage'),'-preview',''))]",
+      "const_imageOffer": "[concat('weblogic',variables('const_hyphen'), split(variables('name_linuxImageOfferSKU'),variables('const_hyphen'))[1],variables('const_hyphen'),'jdk',split(variables('name_linuxImageOfferSKU'),variables('const_hyphen'))[2],variables('const_hyphen'),split(variables('name_linuxImageOfferSKU'),variables('const_hyphen'))[3],if(parameters('usePreviewImage'),'-preview',''))]",
       "const_imagePublisher": "oracle",
       "const_linuxConfiguration": {
          "disablePasswordAuthentication": true,
@@ -304,7 +304,7 @@
       },
       {
          "type": "Microsoft.Storage/storageAccounts",
-         "apiVersion": "2020-06-01",
+         "apiVersion": "2019-06-01",
          "name": "[variables('name_storageAccount')]",
          "location": "[parameters('location')]",
          "sku": {
@@ -320,7 +320,7 @@
       },
       {
          "type": "Microsoft.Storage/storageAccounts/fileServices",
-         "apiVersion": "2020-06-01",
+         "apiVersion": "2019-06-01",
          "name": "[concat(variables('name_storageAccount'), '/default')]",
          "dependsOn": [
             "[variables('ref_storage')]"
@@ -332,7 +332,7 @@
       },
       {
          "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-         "apiVersion": "2020-06-01",
+         "apiVersion": "2019-06-01",
          "name": "[concat(variables('name_storageAccount'), '/default/', variables('name_share'))]",
          "dependsOn": [
             "[variables('ref_fileService')]",
@@ -493,7 +493,7 @@
                ]
             },
             "protectedSettings": {
-               "commandToExecute": "[concat('sh',' ',variables('name_scriptFile'),' ',parameters('wlsDomainName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ',parameters('adminVMName'),' ', variables('const_wlsHome'),' ',variables('name_storageAccount'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('name_storageAccount')), '2019-04-01').keys[0].value,' ',variables('const_mountPointPath'),' ',string(parameters('enableHTTPAdminListenPort')),' ',if(parameters('enableCustomDNS'), parameters('customDNSName'), reference(variables('name_publicIPAddress')).dnsSettings.fqdn),' ',string(parameters('enableCustomSSL')),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomIdentityKeyStoreDataSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomIdentityKeyStorePassPhraseSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomIdentityKeyStoreType')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomTrustKeyStoreDataSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomTrustKeyStorePassPhraseSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomTrustKeyStoreType')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultPrivateKeyAliasSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultPrivateKeyPassPhraseSecretName')),''),' ')]"
+               "commandToExecute": "[concat('sh',' ',variables('name_scriptFile'),' ',parameters('wlsDomainName'),' ',parameters('wlsUserName'),' ',parameters('wlsPassword'),' ',parameters('adminVMName'),' ', variables('const_wlsHome'),' ',variables('name_storageAccount'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('name_storageAccount')), '2019-06-01').keys[0].value,' ',variables('const_mountPointPath'),' ',string(parameters('enableHTTPAdminListenPort')),' ',if(parameters('enableCustomDNS'), parameters('customDNSName'), reference(variables('name_publicIPAddress')).dnsSettings.fqdn),' ',string(parameters('enableCustomSSL')),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomIdentityKeyStoreDataSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomIdentityKeyStorePassPhraseSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomIdentityKeyStoreType')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomTrustKeyStoreDataSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomTrustKeyStorePassPhraseSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultCustomTrustKeyStoreType')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultPrivateKeyAliasSecretName')),''),' ',if(parameters('enableCustomSSL'),base64(parameters('keyVaultPrivateKeyPassPhraseSecretName')),''),' ')]"
             }
          }
       },
